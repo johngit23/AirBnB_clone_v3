@@ -1,30 +1,30 @@
 #!/usr/bin/python3
-# Fabfile to distribute an archive to a web server.
-import os.path
-from fabric.api import env
-from fabric.api import put
-from fabric.api import run
+"""
+Fabric script based on the file 1-pack_web_static.py that distributes an
+archive to the web servers
+"""
+
+from fabric.api import put, run, env
+from os.path import exists
 
 env.hosts = ["100.25.129.130", "35.153.50.107"]
 
-
 def do_deploy(archive_path):
-    """Distributes an archive to a web server.
-    Args:
-        archive_path (str): The path of the archive to distribute.
-    Returns:
-        If the file doesn't exist at archive_path or an error occurs - False.
-        Otherwise - True.
-    """
-    if os.path.isfile(archive_path) is False:
+    """distributes an archive to the web servers"""
+    if exists(archive_path) is False:
         return False
-
-    put(archive_path, "/tmp/")
-
-    run("tar -xzf /tmp/{} -C /data/web_static/releases/".format(
-        archive_path.split("/")[-1]))
-
-    run("ln -s /data/web_static/releases/{}/ /data/web_static/current".format(
-        archive_path.split("/")[-1].split(".")[0]))
-
-    return True
+    try:
+        file_name = archive_path.split("/")[-1]
+        name = file_n.split(".")[0]
+        path = "/data/web_static/releases/"
+        put(archive_path, '/tmp/')
+        run('mkdir -p {}{}/'.format(path, name))
+        run('tar -xzf /tmp/{} -C {}{}/'.format(file_name, path, name))
+        run('rm /tmp/{}'.format(file_name))
+        run('mv {0}{1}/web_static/* {0}{1}/'.format(path, name))
+        run('rm -rf {}{}/web_static'.format(path, name))
+        run('rm -rf /data/web_static/current')
+        run('ln -s {}{}/ /data/web_static/current'.format(path, name))
+        return True
+    except:
+        return False
