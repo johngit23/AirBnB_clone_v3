@@ -84,3 +84,4 @@ class Place(BaseModel, Base):
         def amenities(self, value):
             if type(value) == Amenity:
                 self.amenity_ids.append(value.id)
+
