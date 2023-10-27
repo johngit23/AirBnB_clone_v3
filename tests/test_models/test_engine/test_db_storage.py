@@ -6,13 +6,22 @@ import time
 import unittest
 import sys
 from models.engine.db_storage import DBStorage
-from models import storage
 from models.user import User
 from models.state import State
 from models import storage
 from console import HBNBCommand
 from os import getenv
 from io import StringIO
+import pep8
+from models.amenity import Amenity
+from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+import inspect
+
+classes = {"Amenity": Amenity, "City": City, "Place": Place,
+           "Review": Review, "State": State, "User": User}
 
 db = getenv("HBNB_TYPE_STORAGE")
 
